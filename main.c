@@ -80,7 +80,7 @@ int main(void) {
         segment_size = shmbuffer.shm_segsz;
         printf("segment size %d\n",segment_size);
         /*Write a string to the shared memory segment*/
-        sprintf(shared_memory,"Hello World.");
+        sprintf(shared_memory,"Hello World I am Gayatri.");
         /*detach the shared memory segment*/
         shmdt(shared_memory);
         
