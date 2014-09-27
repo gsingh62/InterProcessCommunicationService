@@ -9,22 +9,39 @@
 #ifndef _server_h
 #define _server_h
 
+#define QUEUE_SIZE 50
+
 typedef struct queue{
     request_param * head;
     request_param * end;
     int priority;
+    int count;
 } process_q;
 
 typedef struct result{
     int result_id;
     int request_id;
     int pid;
-    int randomBytes;
+    int * randomBytes;
 } result_struct;
 
-typedef int (*requestHandle)();
+typedef struct serverProcess{
+    int pid;
+    sharedMem * low_queueRef;
+    sharedMem * med_queueRef;
+    sharedMem * high_queueRef;
+    process_q * lowPriority;
+    process_q * medPriority;
+    process_q * highPriority;
+} server;
 
-int returnBytes();
+extern server * randomBytesService;
+
+extern typedef int (*requestHandle)();
+
+void initializeRandomBytesService();
+
+extern int returnBytes();
 
 void initializeQueue();
 

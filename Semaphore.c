@@ -17,6 +17,22 @@ int AllocateSharedMemory(int n)
     assert(n > 0); /* Idiot-proof the call. */
     return shmget(IPC_PRIVATE, n, IPC_CREAT | SHM_R | SHM_W);
 }
+
+/**
+ * Allocates a shared memory segment and associates the key with it
+ * different keys are used for different priority queues of the server
+ * Current design makes following associations:
+ * k=1234: low priority queue
+ * k=3456: med priority queue
+ * k=5678: high priority queue
+ */
+int Allocate_Priority_Queue_Shared_Memory(int n, int k)
+{
+    assert(n > 0); /*Idiot-proof the call.*/
+    key_t key = k;
+    return shmget(key,n,0666);
+}
+
 /**
  * Maps a shared memory segment onto our address space.
  *
@@ -58,7 +74,8 @@ int CreateSemaphoreSet(int n, short* vals)
     id = semget(IPC_PRIVATE, n, SHM_R | SHM_W);
     arg.array = vals;
     semctl(id, 0, SETALL, arg);
-    return id; }
+    return id;
+}
 /**
  * Frees up the given semaphore set.
  *
@@ -74,7 +91,7 @@ void DeleteSemaphoreSet(int id)
 }
 /**
  * Locks a semaphore within a semaphore set.
- *
+ * BAD: I AM ASSUMING LOCK SEMAPHORE IS IN A FOR LOOP
  * @param  id  Semaphore set it belongs to.
  * @param  i   Actual semaphore to lock.
  *

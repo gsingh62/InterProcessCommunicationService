@@ -16,11 +16,18 @@ typedef struct request{
     struct request * next;
 } request_param;
 
+typedef struct clientProcess{
+    int pid;
+    request_param * requests;
+} client;
+
 void initializeRequestParam(int request_id,int pid);
 
 int callServiceAsync(result_struct *, request_param *, requestHandle*);
 
 int callServiceSync(result_struct *, request_param *);
+
+void initializeClientService(client * cp);
 
 void enqueue(request_param *);
 
